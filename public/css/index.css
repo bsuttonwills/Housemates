@@ -1,0 +1,19 @@
+body{
+    background-color: #ddf7f3;
+}
+
+h1#name{
+    background: linear-gradient(184deg, rgb(83, 145, 231),#130965);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    color: transparent;
+
+    font-family: 'Fredoka One', cursive;
+}
+
+#nav{
+    background: linear-gradient(#ddf7f3, rgb(155, 252, 244));
+    border-bottom-style: groove;
+    border-color: #3b6df7;
+    border-radius: 5%;
+}
