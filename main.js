@@ -15,12 +15,16 @@ app.get('/', function(req, res){
     res.render('pages/home');
 });
 
+app.get('/login', function(req, res){
+    res.render('pages/login');
+});
+
 app.get('/group', function(req, res){
     res.render('pages/createGroup');
 });
 
 app.get('/addMember', function(req, res){
-    res.render('pages/AddMember');
+    res.render('pages/addMember');
 });
 
 function dbConnection(){
