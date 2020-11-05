@@ -4,16 +4,26 @@ const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const port = process.env.PORT || 8000;
 
+const port = process.env.PORT || 8000;
+
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true}));
+
 
 //Landing Page
 app.get('/', function(req, res){
     res.render('pages/home');
 });
 
+app.get('/group', function(req, res){
+    res.render('pages/createGroup');
+});
+
+app.get('/addMember', function(req, res){
+    res.render('pages/AddMember');
+});
 
 function dbConnection(){
     let connection = mysql.createConnection({
