@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('../partials/head', {titleTag: ""}) %> 
+    </head>
+
+    <body>
+        <%- include('../partials/navbar')  %> 
+        <div class="container">
+            <!-- I'm going to center this later -->
+            <blockquote class="blockquote text-center">
+                <h1>Create a Group</h2>
+
+                <form action="/createAGroup">
+                    <label for="gName">Group Name:</label><br>
+                    <input type="text" id="gName" name="gName" value="Housemates"><br><br>
+
+                    <label for="uName">Username:</label><br>
+                    <input type="text" id="uName" name="uName" value="John"><br><br>
+
+                    <label for="password">Password:</label><br>
+                    <input type="text" id="password" name="password" value="password"><br><br>
+
+                    <input type="submit" value="Submit">
+                  </form> 
+            </blockquote>
+        </div>
+    </body>
+</html>
