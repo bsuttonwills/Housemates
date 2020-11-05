@@ -4,8 +4,6 @@ const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const port = process.env.PORT || 8000;
 
-const port = process.env.PORT || 8000;
-
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json())
