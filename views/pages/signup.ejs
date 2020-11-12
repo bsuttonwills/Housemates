@@ -1,46 +1,33 @@
+<!DOCTYPE html>
 <html>
-<h1>Register</h1>
-<form action="/users/Signup" method="POST">
-    <div>
-        <label for="username">Username</label>
-        <input
-                type="username"
-                name="username"
-                placeholder="Enter Username"
-                value="<%= typeof username != 'undefined' ? username : '' %>"
-        />
+    <head>
+        <%- include('../partials/head', {titleTag: ""}) %> 
+    </head>
 
-    </div>
-    <div>
-        <label for="email">Email</label>
-        <input
-                type="email"
-                name="email"
-                placeholder="Enter Email"
-                value="<%= typeof email != 'undefined' ? email : '' %>"
-        />
-    </div>
-    <div >
-        <label for="password">Password</label>
-        <input
-                type="password"
-                name="password"
-                placeholder="Create Password"
-                value="<%= typeof password != 'undefined' ? password : '' %>"
-        />
-    </div>
-    <div >
-        <label for="password2">Confirm Password</label>
-        <input
-                type="password"
-                name="password2"
-                placeholder="Confirm Password"
-                value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
-        />
-    </div>
-    <button type="submit" class="btn btn-primary btn-block">
-        Signup
-    </button>
-</form>
-<p >Have An Account? <a href="/users/login">Login</a></p>
+    <body>
+        <%- include('../partials/navbar')  %> 
+        <div class="container">
+            <blockquote class="blockquote text-center">
+                <h1>Create an Account</h2>
+                <form action="signup" method="POST">
+
+                    <label for="username">Username</label>
+                    <input id="testUser" name="username" placeholder="Enter Username"/>
+                    <br>
+                    <label for="password">Password</label>
+                    <input id="testPass" name="password" placeholder="Enter Password"/>
+                    <br>
+                    <label for="leader">Will you be group leader?</label>
+                    <br>
+                    Yes<input name="leader" type="radio" value="1">
+                    <br>
+                    No<input name="leader" type="radio" value="0">
+                    <br>
+                    <input type="submit" value="Sign Up">
+            
+                </form>
+
+            </blockquote>
+        </div>
+    </body>
 </html>

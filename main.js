@@ -27,17 +27,8 @@ app.get('/addMember', function(req, res){
     res.render('pages/addMember');
 });
 
-app.get('/dbTest', function(req, res){
-    res.render('pages/dbTest');
-})
-
-app.post('/dbTest', function(req, res){
-    var username = req.body.testUser
-    var password = req.body.testPass
-
-    let rows = insertUser(req.body)
-
-    res.render('pages/dbTest', {'rows':rows})
+app.get('/signup', function(req, res){
+    res.render('pages/signup')
 })
 
 
