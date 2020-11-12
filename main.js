@@ -27,6 +27,68 @@ app.get('/addMember', function(req, res){
     res.render('pages/addMember');
 });
 
+app.get('/dbTest', function(req, res){
+    res.render('pages/dbTest');
+})
+
+app.post('/dbTest', function(req, res){
+    var username = req.body.testUser
+    var password = req.body.testPass
+
+    let rows = insertUser(req.body)
+
+    res.render('pages/dbTest', {'rows':rows})
+})
+
+
+function getUsers(){
+    let connection = dbConnection();
+
+    return new Promise(function(resolve, reject){
+        connection.connect(function(err) {
+            if (err) throw err;
+            console.log("Connected!");
+        
+            let sql = `SELECT * 
+                      FROM users`;
+            // console.log(sql);        
+            connection.query(sql, function (err, rows, fields) {
+              if (err) throw err;
+  
+              connection.end();
+            //   console.log(rows);
+              resolve(rows);
+            });
+        });
+    });
+}
+
+function insertUser(body){
+    let connection = dbConnection()
+
+    return new Promise(function(resolve, rejected){
+        connection.connect(function(err) {
+            if (err) throw err;
+            // console.log("Connected!");
+          
+            let sql = `INSERT INTO users
+                          (username, password)
+                          VALUES (?,?)`;
+        
+            let params = [body.username, body.password];
+      
+            connection.query(sql, params, function (err, rows, fields) {
+              if (err) throw err;
+              //res.send(rows);
+              resolve(rows);
+              connection.end();
+              
+            });
+                
+          });//connect
+    });
+}
+
 function dbConnection(){
     let connection = mysql.createConnection({
         host: 'jsftj8ez0cevjz8v.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
