@@ -19,6 +19,9 @@ app.get('/login', function(req, res){
     res.render('pages/login');
 });
 
+app.get('/addTask', function(req, res){
+    res.render('pages/addTask');
+});
 app.get('/group', function(req, res){
     res.render('pages/createGroup');
 });
