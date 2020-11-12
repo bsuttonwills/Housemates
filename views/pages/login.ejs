@@ -1,26 +1,27 @@
+<!DOCTYPE html>
 <html>
+    <head>
+        <%- include('../partials/head', {titleTag: ""}) %> 
+    </head>
 
-<head> Login </head>
+    <body>
+        <%- include('../partials/navbar')  %> 
+        <div class="container">
+            <blockquote class="blockquote text-center">
+                <h1>Login to Account</h2>
+                <form action="login" method="POST">
 
-<form action="/users/Login" method="POST">
-    <div>
-        <label for="username">Username</label>
-        <input
-                type="username"
-                name="username"
-                placeholder="Enter Username"
-        />
-    </div>
-    <div>
-        <label for="password">Password</label>
-        <input
-                type="password"
-                name="password"
-                placeholder="Enter Password"
-        />
+                    <label for="username">Username</label>
+                    <input id="user" name="username" placeholder="Enter Username"/>
+                    <br>
+                    <label for="password">Password</label>
+                    <input id="pass" name="password" placeholder="Enter Password"/>
+                    <br>
+                    <input type="submit" value="Login">
+            
+                </form>
 
-    </div>
-    <button type="submit" class="btn btn-primary btn-block">Login</button>
-
-</form>
+            </blockquote>
+        </div>
+    </body>
 </html>
