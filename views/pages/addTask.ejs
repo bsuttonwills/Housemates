@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('../partials/head', {titleTag: ""}) %> 
+    </head>
+
+    <body>
+        <%- include('../partials/navbar')  %> 
+        <div class="container">
+            <!-- I'm going to center this later -->
+            <blockquote class="blockquote text-center">
+                <h1>Add a Task</h2>
+
+                <form action="/AddTaskAction">
+                    <label for="title">Task Title:</label><br>
+                    <input type="text" id="title" name="title" value="Doing the dishes"><br><br>
+
+                    <label for="type">Type:</label><br>
+                    <input type="text" id="type" name="type" value="Chore"><br><br>
+
+                    <label for="location">Location:</label><br>
+                    <input type="text" id="location" name="location" value="Home"><br><br>
+
+                    <label for="time">Time:</label><br>
+                    <input type="text" id="time" name="time" value="2:00pm"><br><br>
+
+                    <label for="date">Date:</label><br>
+                    <input type="text" id="date" name="date" value="12/05/2020"><br><br>
+
+                    <label for="desc">Description:</label><br>
+                    <input type="text" id="desc" name="desc" value="I will be washing the dishes."><br><br>
+
+                    <input type="submit" value="Add">
+                  </form> 
+            </blockquote>
+        </div>
+    </body>
+</html>
