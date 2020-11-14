@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('../partials/head', {titleTag: ""}) %> 
+    </head>
+
+    <body>
+        <%- include('../partials/navbar')  %> 
+        <div class="container">
+            <blockquote class="blockquote text-center">
+                <h1>Login to Account</h2>
+                <form action="login" method="POST">
+
+                    <label for="username">Username</label>
+                    <input id="user" name="username" placeholder="Enter Username"/>
+                    <br>
+                    <label for="password">Password</label>
+                    <input id="pass" name="password" placeholder="Enter Password"/>
+                    <br>
+                    <input type="submit" value="Login">
+            
+                </form>
+
+            </blockquote>
+        </div>
+    </body>
+</html>
