@@ -1,0 +1,31 @@
+{
+    "Tasks" : [
+        {
+            "type" : "Yellow",
+            "title" : "Take the Garbage Out",
+            "location" : "The Dumpster Outside the Building",
+            "description" : "Please take out the garbage, the apartment is starting to stink.",
+            "names" : "Ryan Proctor",
+            "time" : "2:30pm",
+            "date" : "03/25/2021"
+        },
+        {
+            "type" : "Green",
+            "title" : "New Years Eve Party",
+            "location" : "At the Apartment",
+            "description" : "Everyone should help with the decorations and the setup for the party before the guests arrive. Blayne and Ryan should be in charge of the alcohol and the snacks.",
+            "names" : "Everyone",
+            "time" : "4:00pm",
+            "date" : "12/31/2020"
+        },
+        {
+            "type" : "Red",
+            "title" : "Work on Project 3 for Software Engineering",
+            "location" : "Online while at Home",
+            "description" : "We should work on our project so we can go into winter break relaxing.",
+            "names" : "Blayne Suttonwills, Nathan Latronica, Nick Tralongo, & Ryan Proctor",
+            "time" : "11:59pm",
+            "date" : "12/11/2020"
+        }
+    ]
+ }
