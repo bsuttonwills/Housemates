@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
-const { response } = require('express');
 const port = process.env.PORT || 8000;
 
 app.set('view engine', 'ejs');
@@ -32,68 +31,49 @@ app.get('/addMember', function(req, res){
     res.render('pages/addMember');
 });
 
-app.get('/signup', function(req, res){
-    res.render('pages/signup')
+app.post('/createAGroup', async function(req, res) {
+    let rows = await createGroup(req.body)
+    console.log(rows)
+
+    let message = "Group WAS NOT added to the database!";
+    if (rows.affectedRows > 0) {
+        message= "Group successfully created!";
+    }
+    res.render("group", {"message":message});
 })
 
-//This serves as a test site, NO LINKS DIRECT HERE!
-app.get('/grouptasks', function(req, res){
-    //TODO: This is a test file, replace this once the database is connected
-    /*
-    The file may not reflect the final structure so the variables might
-    needed to be renamed in order to work.
-    */
-    var list = require('./testTask.json')
-    res.render('pages/taskPage.ejs', {tasks: list.Tasks})
-})
 
-function getUsers(){
-    let connection = dbConnection();
+// CREATE GROUP FUNCTION
 
-    return new Promise(function(resolve, reject){
-        connection.connect(function(err) {
+function createGroup(body){
+   
+    let conn = dbConnection();
+     
+     return new Promise(function(resolve, reject){
+         conn.connect(function(err) {
             if (err) throw err;
             console.log("Connected!");
-        
-            let sql = `SELECT * 
-                      FROM users`;
-            // console.log(sql);        
-            connection.query(sql, function (err, rows, fields) {
-              if (err) throw err;
-  
-              connection.end();
-            //   console.log(rows);
-              resolve(rows);
-            });
-        });
-    });
-}
-
-function insertUser(body){
-    let connection = dbConnection()
-
-    return new Promise(function(resolve, rejected){
-        connection.connect(function(err) {
-            if (err) throw err;
-            // console.log("Connected!");
-          
-            let sql = `INSERT INTO users
-                          (username, password)
+         
+            let sql = `INSERT INTO groups
+                         (group_name, leader_name)
                           VALUES (?,?)`;
-        
-            let params = [body.username, body.password];
-      
-            connection.query(sql, params, function (err, rows, fields) {
-              if (err) throw err;
-              //res.send(rows);
-              resolve(rows);
-              connection.end();
-              
+         
+            let params = [body.gName, body.uName];
+            conn.query(sql, params, function (err, rows, fields) {
+               if (err) throw err;
+               //res.send(rows);
+               conn.end();
+               resolve(rows);
             });
-                
-          });//connect
-    });
-}
+         
+         });//connect
+     });//promise 
+ }
+
+// END OF CREATE GROUP FUNCTION
+
+
+
 
 function dbConnection(){
     let connection = mysql.createConnection({
@@ -113,8 +93,9 @@ function dbSetup() {
 
     //create groups table
     var createGroups = `CREATE TABLE IF NOT EXISTS groups
-                        (id int NOT NULL,
-                        leader_id int NOT NULL,
+                        (id int NOT NULL AUTO_INCREMENT,
+                        group_Name varchar(50) NOT NULL,
+                        leader_name varchar(20) NOT NULL,
                         PRIMARY KEY(id)
                         );`
     connection.query(createGroups, function (err, rows, fields) {

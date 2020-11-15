@@ -6,12 +6,12 @@
 
     <body>
         <%- include('../partials/navbar')  %> 
-        <div class="container">
+        <div class="container2">
             <!-- I'm going to center this later -->
             <blockquote class="blockquote text-center">
                 <h1>Create a Group</h2>
 
-                <form action="/createAGroup">
+                <form action="/createAGroup" method="POST">
                     <label for="gName">Group Name:</label><br>
                     <input type="text" id="gName" name="gName" value="Housemates"><br><br>
 
