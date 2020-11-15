@@ -1,8 +1,9 @@
-body{
+html, body{
     background-color: #ddf7f3;
+    height: 100%;
 }
 
-h1#name{
+.name{
     background: linear-gradient(184deg, rgb(83, 145, 231),#130965);
     -webkit-background-clip: text;
     -moz-background-clip: text;
@@ -16,4 +17,19 @@ h1#name{
     border-bottom-style: groove;
     border-color: #3b6df7;
     border-radius: 5%;
+}
+
+div.task{
+    background-color: rgba(194, 194, 194, 0.699);
+    border-radius: 50px;
+    box-shadow: 10px 10px 5px grey;
+}
+
+div.taskFont{
+    font-family: 'Oleo Script', cursive;
+}
+
+.container{
+  margin-top: 20%;
+  margin-bottom: auto;
 }

@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
+const { response } = require('express');
 const port = process.env.PORT || 8000;
 
 app.set('view engine', 'ejs');
@@ -22,6 +23,7 @@ app.get('/login', function(req, res){
 app.get('/addTask', function(req, res){
     res.render('pages/addTask');
 });
+
 app.get('/group', function(req, res){
     res.render('pages/createGroup');
 });
@@ -34,6 +36,16 @@ app.get('/signup', function(req, res){
     res.render('pages/signup')
 })
 
+//This serves as a test site, NO LINKS DIRECT HERE!
+app.get('/grouptasks', function(req, res){
+    //TODO: This is a test file, replace this once the database is connected
+    /*
+    The file may not reflect the final structure so the variables might
+    needed to be renamed in order to work.
+    */
+    var list = require('./testTask.json')
+    res.render('pages/taskPage.ejs', {tasks: list.Tasks})
+})
 
 function getUsers(){
     let connection = dbConnection();
