@@ -24,7 +24,8 @@ app.get('/addTask', function(req, res){
 });
 
 app.get('/group', function(req, res){
-    res.render('pages/createGroup');
+    let message = ""
+    res.render('pages/createGroup', {"message":message});
 });
 
 app.get('/addMember', function(req, res){
@@ -39,7 +40,7 @@ app.post('/createAGroup', async function(req, res) {
     if (rows.affectedRows > 0) {
         message= "Group successfully created!";
     }
-    res.render("group", {"message":message});
+    res.render('pages/createGroup', {"message":message});
 })
 
 
