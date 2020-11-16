@@ -19,6 +19,10 @@ app.get('/login', function(req, res){
     res.render('pages/login');
 });
 
+app.get('/signup', function(req, res){
+    res.render('pages/signup');
+});
+
 app.get('/addTask', function(req, res){
     res.render('pages/addTask');
 });
