@@ -19,21 +19,40 @@ app.get('/login', function(req, res){
     res.render('pages/login');
 });
 
-app.get('/signup', function(req, res){
-    res.render('pages/signup');
-});
-
 app.get('/addTask', function(req, res){
     res.render('pages/addTask');
 });
 
+app.get('/addMember', function(req, res){
+    res.render('pages/addMember');
+});
+
+//Sign UP Pages
+app.get('/signup', function(req, res){
+    let message = ""
+    res.render('pages/signup', {"message":message});
+});
+
+app.post('/signUpUser', async function(req, res) {
+    let rows = await signUpUser(req.body)
+    console.log(rows)
+
+    let message = "User was not created";
+    if (rows.affectedRows > 0) {
+        message= "User was successfully created!";
+    }
+    res.render('pages/signup', {"message":message});
+
+})
+
+//END of Sign Up Pages
+
+
+
+//Create Group Page Stuff
 app.get('/group', function(req, res){
     let message = ""
     res.render('pages/createGroup', {"message":message});
-});
-
-app.get('/addMember', function(req, res){
-    res.render('pages/addMember');
 });
 
 app.post('/createAGroup', async function(req, res) {
@@ -47,6 +66,7 @@ app.post('/createAGroup', async function(req, res) {
     res.render('pages/createGroup', {"message":message});
 })
 
+//END of Create group Pages
 
 // CREATE GROUP FUNCTION
 
@@ -76,6 +96,33 @@ function createGroup(body){
  }
 
 // END OF CREATE GROUP FUNCTION
+
+//SIGN UP NEW USER FUNCTION
+function signUpUser(body){
+   
+    let conn = dbConnection();
+     
+     return new Promise(function(resolve, reject){
+         conn.connect(function(err) {
+            if (err) throw err;
+            console.log("Connected!");
+         
+            let sql = `INSERT INTO users
+                         (username, password)
+                          VALUES (?,?)`;
+         
+            let params = [body.username, body.password];
+            conn.query(sql, params, function (err, rows, fields) {
+               if (err) throw err;
+               //res.send(rows);
+               conn.end();
+               resolve(rows);
+            });
+         
+         });//connect
+     });//promise 
+ }
+//END OF SIGN UP NEW USER FUNCTION
 
 
 
