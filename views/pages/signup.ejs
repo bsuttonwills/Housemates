@@ -6,10 +6,10 @@
 
     <body>
         <%- include('../partials/navbar')  %> 
-        <div class="container">
+        <div class="container2">
             <blockquote class="blockquote text-center">
                 <h1>Create an Account</h2>
-                <form action="signup" method="POST">
+                <form action="signUpUser" method="POST">
 
                     <label for="username">Username</label>
                     <input id="user" name="username" placeholder="Enter Username"/>
@@ -17,15 +17,11 @@
                     <label for="password">Password</label>
                     <input id="pass" name="password" placeholder="Enter Password"/>
                     <br>
-                    <label for="leader">Will you be group leader?</label>
-                    <br>
-                    Yes<input name="leader" type="radio" value="1">
-                    <br>
-                    No<input name="leader" type="radio" value="0">
-                    <br>
                     <input type="submit" value="Sign Up">
             
                 </form>
+                <%= message %>
+
 
             </blockquote>
         </div>
