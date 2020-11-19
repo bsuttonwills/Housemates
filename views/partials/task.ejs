@@ -1,0 +1,14 @@
+<div class="row align-items-center task taskFont py-3 my-4">
+    <div class="col-6 py-3">
+        <h5>Task Type: <%= currentTask.type %> </h5>
+        <h1 class="my-1"><%= currentTask.title %></h1>
+        <h4>Location: <%= currentTask.location %></h4>
+        <p><%= currentTask.description %></p>
+    </div>
+    <div class="col-3 py-3">
+        <h3 class="my-1"><%= currentTask.names %></h3>
+    </div>
+    <div class="col-3 py-3">
+        <h2 class="my-1"><%= currentTask.date %> at <%= currentTask.time %></h2>
+    </div>
+</div>

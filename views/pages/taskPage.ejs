@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <%- include('../partials/head', {titleTag: " - Group Tasks"}) %> 
+    </head>
+
+    <body>
+        <%- include('../partials/navbar')  %> 
+        <div class="container my-3">
+            <div class="row align-items-center taskFont">
+                <h4 class="col-6">Task:</h4>
+                <h4 class="col-3">Assigned To:</h4>
+                <h4 class="col-3">Completed by:</h4>
+            </div>
+            <% for( let index = 0; index < tasks.length; index++ ) { %>
+                <%- include('../partials/task', {currentTask: tasks[index]}) %>
+            <% } %>
+        </div>
+    </body>
+</html>
