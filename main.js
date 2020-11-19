@@ -18,10 +18,23 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
     res.render('pages/login');
 });
-
+//task pages
 app.get('/addTask', function(req, res){
     res.render('pages/addTask');
 });
+
+app.post('/taskInsert', async function(req, res){
+    let rows = await insertTask(req.body)
+    console.log(rows)
+
+    let message = "Error Submitting Task.";
+    if (rows.affectedRows > 0) {
+        console.log("Task Submitted");
+    }
+    res.render('pages/addTask');
+
+})
+//end of task pages
 
 app.get('/addMember', function(req, res){
     res.render('pages/addMember');
@@ -124,7 +137,30 @@ function signUpUser(body){
  }
 //END OF SIGN UP NEW USER FUNCTION
 
-
+//INSERT NEW TASK FUNCTION
+function insertTask(body){
+    let connection = dbConnection();
+     
+    return new Promise(function(resolve, reject){
+        connection.connect(function(err) {
+            if (err) throw err;
+            console.log("Insert Task Connected!");
+            
+            let sql = `INSERT INTO tasks
+                            (group_id, title, type, location, time, date, description)
+                            VALUES (?,?,?,?,?,?,?)`;
+            
+            let params = [0, body.title, body.type, body.location, body.hour, body.date, body.desc];
+            connection.query(sql, params, function (err, rows, fields) {
+                if (err) throw err;
+                //res.send(rows);
+                connection.end();
+                resolve(rows);
+            });
+        
+        });//connect
+    });//promise 
+}
 
 
 function dbConnection(){
@@ -171,6 +207,13 @@ function dbSetup() {
         }
     })
 
+
+    // var droptasks = `DROP TABLE IF EXISTS tasks;`
+    // connection.query(droptasks, function (err, rows, fields) {
+    //     if (err) {
+    //     throw err
+    //     } 
+    // })
     //code to create the tasks table
     var createTasks = `CREATE TABLE IF NOT EXISTS tasks
                         (id int NOT NULL AUTO_INCREMENT,
@@ -181,9 +224,7 @@ function dbSetup() {
                         time varchar(7) NOT NULL,
                         date varchar(10) NOT NULL,
                         description varchar(500) NOT NULL,
-                        PRIMARY KEY(id),
-                        FOREIGN KEY(group_id) REFERENCES groups(id)
-                        );`
+                        PRIMARY KEY(id));`
     connection.query(createTasks, function (err, rows, fields) {
         if (err) {
         throw err

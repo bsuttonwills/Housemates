@@ -11,26 +11,66 @@
             <blockquote class="blockquote text-center">
                 <h1>Add a Task</h2>
 
-                <form action="/AddTaskAction">
+                <form action="/taskInsert" method="POST">
                     <label for="title">Task Title:</label><br>
-                    <input type="text" id="title" name="title" value="Doing the dishes"><br><br>
+                    <input type="text" id="title" name="title" placeholder="Doing the Dishes"><br><br>
 
                     <label for="type">Type:</label><br>
-                    <input type="text" id="type" name="type" value="Chore"><br><br>
+                    <select id="type" name="type">
+                        <option value="Chore">Chore</option>
+                        <option value="Event">Event</option>
+                        <option value="Request">Request</option>
+                    </select><br><br>
+                    <!-- <input type="text" id="type" name="type" value="Chore"><br><br> -->
 
                     <label for="location">Location:</label><br>
-                    <input type="text" id="location" name="location" value="Home"><br><br>
+                    <input type="text" id="location" name="location" placeholder="Home"><br><br>
 
                     <label for="time">Time:</label><br>
-                    <input type="text" id="time" name="time" value="2:00pm"><br><br>
+                    <select id="hour" class="time" name="hour">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                    :
+                    <select id="minute" class="time" name="time">
+                        <option value="00">00</option>
+                        <option value="05">05</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="30">30</option>
+                        <option value="35">35</option>
+                        <option value="40">40</option>
+                        <option value="45">45</option>
+                        <option value="50">50</option>
+                        <option value="55">55</option>
+                    </select>
+                    <select id="day_night" class="time" name="time">
+                        <option value="am">am</option>
+                        <option value="pm">pm</option>
+                    </select>
+                    <br><br>
+                    <!-- <input type="text" id="time" name="time" placeholder="2:00pm"><br><br> -->
 
                     <label for="date">Date:</label><br>
-                    <input type="text" id="date" name="date" value="12/05/2020"><br><br>
+                    <input type="text" id="date" name="date" placeholder="MM/DD/YYYY"><br><br>
 
                     <label for="desc">Description:</label><br>
-                    <input type="text" id="desc" name="desc" value="I will be washing the dishes."><br><br>
+                    <textarea name="desc" placeholder="I will be washing the dishes." rows="5"></textarea><br><br>
+                    <!-- <input type="text" id="desc" name="desc" value="I will be washing the dishes."><br><br> -->
 
-                    <input type="submit" value="Add">
+                    <input type="submit" value="Submit Task">
                   </form> 
             </blockquote>
         </div>
