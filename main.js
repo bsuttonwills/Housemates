@@ -79,6 +79,17 @@ app.post('/createAGroup', async function(req, res) {
     res.render('pages/createGroup', {"message":message});
 })
 
+//This serves as a test site, NO LINKS DIRECT HERE!
+app.get('/grouptasks', function(req, res){
+    //TODO: This is a test file, replace this once the database is connected
+    /*
+    The file may not reflect the final structure so the variables might
+    needed to be renamed in order to work.
+    */
+    var list = require('./testTask.json')
+    res.render('pages/taskPage.ejs', {tasks: list.Tasks})
+})
+
 //END of Create group Pages
 
 // CREATE GROUP FUNCTION
