@@ -161,7 +161,10 @@ function insertTask(body){
                             (group_id, title, type, location, time, date, description)
                             VALUES (?,?,?,?,?,?,?)`;
             
-            let params = [0, body.title, body.type, body.location, body.hour, body.date, body.desc];
+            let hour = body.hour;
+            let fullTime = hour.concat(":", body.minute, body.day_night);
+
+            let params = [0, body.title, body.type, body.location, fullTime, body.date, body.desc];
             connection.query(sql, params, function (err, rows, fields) {
                 if (err) throw err;
                 //res.send(rows);
