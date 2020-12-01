@@ -36,8 +36,8 @@ app.post('/taskInsert', async function(req, res){
 })
 //end of task pages
 
-app.get('/addMember', function(req, res){
-    res.render('pages/addMember');
+app.get('/joinGroup', function(req, res){
+    res.render('pages/joinGroup');
 });
 
 //Sign UP Pages
