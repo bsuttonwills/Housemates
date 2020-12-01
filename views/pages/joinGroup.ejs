@@ -11,7 +11,7 @@
             <blockquote class="blockquote text-center">
                 <h1>Join a Group</h2>
 
-                <form action="/AddtoGroup">
+                <form action="/addToGroup" method="POST">
                     <label for="uName">Username:</label><br>
                     <input type="text" id="uName" name="uName" value="John"><br><br>
 
@@ -23,6 +23,8 @@
 
                     <input type="submit" value="Add">
                   </form> 
+                  <%= message %>
+
             </blockquote>
         </div>
     </body>
