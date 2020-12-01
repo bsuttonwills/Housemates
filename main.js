@@ -36,9 +36,28 @@ app.post('/taskInsert', async function(req, res){
 })
 //end of task pages
 
+//Joining a group Pages
+
 app.get('/joinGroup', function(req, res){
-    res.render('pages/joinGroup');
+    let message = ""
+    res.render('pages/joinGroup', {"message":message});
 });
+
+app.post('/addToGroup', async function(req, res) {
+    let message = ""
+    
+    let rows = await joinGroup(req.body)
+    console.log(rows)
+    
+    message = "You have failed to join a group."
+    if (rows.affectedRows > 0) {
+        message = "You have successfully joined a group!";
+    }
+    res.render('pages/joinGroup', {"message":message});
+
+})
+
+//End of joining a group pages
 
 //Sign UP Pages
 app.get('/signup', function(req, res){
@@ -48,7 +67,6 @@ app.get('/signup', function(req, res){
 
 app.post('/signUpUser', async function(req, res) {
     let rows = await signUpUser(req.body)
-    console.log(rows)
 
     let message = "User was not created";
     if (rows.affectedRows > 0) {
@@ -74,10 +92,37 @@ app.post('/createAGroup', async function(req, res) {
 
     let message = "Group WAS NOT added to the database!";
     if (rows.affectedRows > 0) {
-        message= "Group successfully created!";
+        message = "Group successfully created!";
     }
     res.render('pages/createGroup', {"message":message});
 })
+
+//JOIN GROUP FUNCTION
+function joinGroup(body){
+   
+    let conn = dbConnection();
+     
+     return new Promise(function(resolve, reject){
+         conn.connect(function(err) {
+            if (err) throw err;
+            console.log("Connected!");
+         
+            let sql = `UPDATE users
+                        set group_name =?
+                        WHERE username =? `;
+         
+            let params = [body.gName, body.uName];
+            conn.query(sql, params, function (err, rows, fields) {
+               if (err) throw err;
+               //res.send(rows);
+               conn.end();
+               resolve(rows);
+            });
+         
+         });//connect
+     });//promise 
+ }
+//END OF JOIN GROUP FUNCTION
 
 //This serves as a test site, NO LINKS DIRECT HERE!
 app.get('/grouptasks', function(req, res){
@@ -211,6 +256,7 @@ function dbSetup() {
                         group_id int,
                         username varchar(20) NOT NULL,
                         password varchar(20) NOT NULL,
+                        group_name varchar(50) NOT NULL,
                         leader bool NOT NULL DEFAULT "0",
                         PRIMARY KEY(id), 
                         FOREIGN KEY(group_id) REFERENCES groups(id)
