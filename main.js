@@ -88,11 +88,13 @@ app.get('/group', function(req, res){
 
 app.post('/createAGroup', async function(req, res) {
     let rows = await createGroup(req.body)
+    let join = await joinGroup(req.body)
+    //creating a group should also make the user join it
     console.log(rows)
 
-    let message = "Group WAS NOT added to the database!";
-    if (rows.affectedRows > 0) {
-        message = "Group successfully created!";
+    let message = "Group WAS NOT created !";
+    if (rows.affectedRows > 0 && join.affectedRows > 0) {
+        message = "You have created and join " + req.body.gName;
     }
     res.render('pages/createGroup', {"message":message});
 })
