@@ -47,7 +47,8 @@ app.get('/signup', function(req, res){
 });
 
 app.post('/signUpUser', async function(req, res) {
-    let rows = await signUpUser(req.body)
+    let isUser = await checkUsers(req.body);
+    let rows = await signUpUser(req.body);
     console.log(rows)
 
     let message = "User was not created";
@@ -120,6 +121,33 @@ function createGroup(body){
  }
 
 // END OF CREATE GROUP FUNCTION
+
+// GET USERS FUNCTION
+function checkUsers(body){
+    let isUser = false;
+    let conn = dbConnection();
+
+    return new Promise(function(resolve, reject){
+        conn.connect(function(err) {
+            if (err) throw err;
+            console.log("Get Users Connected");
+
+            let sql = `SELECT * FROM users WHERE username = ?;`;
+            let params = [body.username]
+            conn.query(sql, params, function (err, rows) {
+                if (err) throw err;
+                //res.send(rows);
+                // isUser = rows
+                console.log(rows['affectedRows'])
+                // console.log(isUser)
+                conn.end();
+                resolve(rows);
+            });
+
+        })
+    })
+}
+
 
 //SIGN UP NEW USER FUNCTION
 function signUpUser(body){
