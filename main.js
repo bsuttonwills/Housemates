@@ -170,18 +170,22 @@ function createGroup(body){
          conn.connect(function(err) {
             if (err) throw err;
             console.log("Connected!");
-         
+            
+            console.log(ifExist('groups', 'group_Name', 'TEST'))
+
             let sql = `INSERT INTO groups
                          (group_name, leader_name)
                           VALUES (?,?)`;
          
-            let params = [body.gName, body.uName];
-            conn.query(sql, params, function (err, rows, fields) {
-               if (err) throw err;
-               //res.send(rows);
-               conn.end();
-               resolve(rows);
-            });
+            if(true){
+                let params = [body.gName, body.uName];
+                conn.query(sql, params, function (err, rows, fields) {
+                if (err) throw err;
+                //res.send(rows);
+                conn.end();
+                resolve(rows);
+                });
+            }
          
          });//connect
      });//promise 
@@ -316,6 +320,48 @@ function dbSetup() {
     
 
     connection.end()
+}
+
+// function insertTask(body){
+//     let connection = dbConnection();
+     
+//     return new Promise(function(resolve, reject){
+//         connection.connect(function(err) {
+//             if (err) throw err;
+//             console.log("Insert Task Connected!");
+            
+//             let sql = `INSERT INTO tasks
+//                             (group_id, title, type, location, time, date, description)
+//                             VALUES (?,?,?,?,?,?,?)`;
+            
+//             let hour = body.hour;
+//             let fullTime = hour.concat(":", body.minute, body.day_night);
+
+//             let params = [0, body.title, body.type, body.location, fullTime, body.date, body.desc];
+//             connection.query(sql, params, function (err, rows, fields) {
+//                 if (err) throw err;
+//                 //res.send(rows);
+//                 connection.end();
+//                 resolve(rows);
+//             });
+        
+//         });//connect
+//     });//promise 
+// }
+
+
+function ifExist(table, identifier, name){
+    let connection = dbConnection();
+
+    return new Promise(function(resolve, reject){
+        connection.connect(function(err){
+            if(err) throw err;
+
+            let sql = 'select * from ' + table + ' WHERE ' + identifier + ' = \'' + name + '\';'
+        })
+    })
+
+    
 }
   
 dbSetup()
