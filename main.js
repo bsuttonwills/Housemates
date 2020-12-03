@@ -15,9 +15,6 @@ app.get('/', function(req, res){
     res.render('pages/home');
 });
 
-app.get('/login', function(req, res){
-    res.render('pages/login');
-});
 //task pages
 app.get('/addTask', function(req, res){
     res.render('pages/addTask');
@@ -35,6 +32,27 @@ app.post('/taskInsert', async function(req, res){
 
 })
 //end of task pages
+
+//LOGIN pages
+app.get('/login', function(req, res){
+    let message = ""
+    res.render('pages/login', {"message": message});
+});
+
+app.get('/loginAction', async function(req, res){
+    let message = "Username or password did not match"
+    // let rows = await func(req.body)(check if username password are in db function) 
+    
+    // if yes {
+    res.render('pages/taskPage');
+    //} else {
+    res.render('pages/login', {"message": message});
+
+    //}
+
+});
+
+//END of login pages
 
 //Joining a group Pages
 
@@ -94,7 +112,7 @@ app.post('/createAGroup', async function(req, res) {
 
     let message = "Group WAS NOT created !";
     if (rows.affectedRows > 0 && join.affectedRows > 0) {
-        message = "You have created and join " + req.body.gName;
+        message = "You have created and joined group " + req.body.gName;
     }
     res.render('pages/createGroup', {"message":message});
 })
