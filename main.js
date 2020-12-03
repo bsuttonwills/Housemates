@@ -39,14 +39,17 @@ app.get('/login', function(req, res){
     res.render('pages/login', {"message": message});
 });
 
-app.get('/loginAction', async function(req, res){
+app.get('/loginAction',async function(req, res){
     let message = "Username or password did not match"
-    // let rows = await func(req.body)(check if username password are in db function) 
-    
+    var list = require('./testTask.json')
+
+    //check if that username and password match
+
     // if yes {
-    res.render('pages/taskPage');
+        //get all that groups tasks
+        res.render('pages/taskPage.ejs', {tasks: list.Tasks}) //with that groups tasks
     //} else {
-    res.render('pages/login', {"message": message});
+    //res.render('pages/login', {"message": message});
 
     //}
 
