@@ -108,15 +108,23 @@ app.get('/group', function(req, res){
 });
 
 app.post('/createAGroup', async function(req, res) {
-    let rows = await createGroup(req.body)
-    let join = await joinGroup(req.body)
-    //creating a group should also make the user join it
-    console.log(rows)
+    let message = "Group WAS NOT created!";
+    //Checks if group already exists
+    let flag = await ifExist('groups', 'group_Name', req.body.gName)
+    //Runs this scope is the group does not exist
+    if(flag) {
+        let rows = await createGroup(req.body)
+        let join = await joinGroup(req.body)
+        //creating a group should also make the user join it
+        console.log(rows)
 
-    let message = "Group WAS NOT created !";
-    if (rows.affectedRows > 0 && join.affectedRows > 0) {
-        message = "You have created and joined group " + req.body.gName;
+        if (rows.affectedRows > 0 && join.affectedRows > 0) {
+            message = "You have created and joined group " + req.body.gName;
+        }
     }
+    //Appends message if the group exists
+    else
+        message = message + " " + req.body.gName + " already exists!"
     res.render('pages/createGroup', {"message":message});
 })
 
@@ -170,22 +178,18 @@ function createGroup(body){
          conn.connect(function(err) {
             if (err) throw err;
             console.log("Connected!");
-            
-            console.log(ifExist('groups', 'group_Name', 'TEST'))
 
             let sql = `INSERT INTO groups
                          (group_name, leader_name)
                           VALUES (?,?)`;
-         
-            if(true){
-                let params = [body.gName, body.uName];
-                conn.query(sql, params, function (err, rows, fields) {
-                if (err) throw err;
-                //res.send(rows);
-                conn.end();
-                resolve(rows);
-                });
-            }
+
+            let params = [body.gName, body.uName];
+            conn.query(sql, params, function (err, rows, fields) {
+            if (err) throw err;
+            //res.send(rows);
+            conn.end();
+            resolve(rows);
+            });
          
          });//connect
      });//promise 
@@ -322,46 +326,25 @@ function dbSetup() {
     connection.end()
 }
 
-// function insertTask(body){
-//     let connection = dbConnection();
-     
-//     return new Promise(function(resolve, reject){
-//         connection.connect(function(err) {
-//             if (err) throw err;
-//             console.log("Insert Task Connected!");
-            
-//             let sql = `INSERT INTO tasks
-//                             (group_id, title, type, location, time, date, description)
-//                             VALUES (?,?,?,?,?,?,?)`;
-            
-//             let hour = body.hour;
-//             let fullTime = hour.concat(":", body.minute, body.day_night);
-
-//             let params = [0, body.title, body.type, body.location, fullTime, body.date, body.desc];
-//             connection.query(sql, params, function (err, rows, fields) {
-//                 if (err) throw err;
-//                 //res.send(rows);
-//                 connection.end();
-//                 resolve(rows);
-//             });
-        
-//         });//connect
-//     });//promise 
-// }
-
-
-function ifExist(table, identifier, name){
+//Checks if a certain element exists in the table specified
+async function ifExist(table, identifier, name){
     let connection = dbConnection();
+    let sql = 'select * from ' + table + ' WHERE ' + identifier + ' = \'' + name + '\';'
+    let promise = new Promise((resolve, reject) => {
+        connection.connect(function(err) {
+            if (err) throw err
 
-    return new Promise(function(resolve, reject){
-        connection.connect(function(err){
-            if(err) throw err;
+            connection.query(sql, function (err, result){
+                if (err) throw err
 
-            let sql = 'select * from ' + table + ' WHERE ' + identifier + ' = \'' + name + '\';'
+                connection.end()
+                resolve(result.length)
+            })
         })
     })
 
-    
+    let num = await promise
+    return num === 0
 }
   
 dbSetup()
