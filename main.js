@@ -39,15 +39,28 @@ app.get('/login', function(req, res){
     res.render('pages/login', {"message": message});
 });
 
-app.get('/loginAction',async function(req, res){
-    let message = "Username or password did not match"
+app.post('/loginAction',async function(req, res){
+    let isUser = await checkUsers(req.body);
+    let message = "";
     var list = require('./testTask.json')
 
+    //if no users returned, signup. else change message
+    if (isUser.length == 0 || isUser == undefined){
+        message = "Account does not exist.";
+        res.render('pages/login', {"message": message})
+
+    } else if (isUser[0].password === req.body.password){
+        res.render('pages/taskPage.ejs', {tasks: list.Tasks})
+        
+    } else {
+        message = "Username or Password is incorrect."
+        res.render('pages/login', {"message": message})
+    }
     //check if that username and password match
 
     // if yes {
         //get all that groups tasks
-        res.render('pages/taskPage.ejs', {tasks: list.Tasks}) //with that groups tasks
+       // res.render('pages/taskPage.ejs', {tasks: list.Tasks}) //with that groups tasks
     //} else {
     //res.render('pages/login', {"message": message});
 
@@ -88,14 +101,31 @@ app.get('/signup', function(req, res){
 
 app.post('/signUpUser', async function(req, res) {
     let isUser = await checkUsers(req.body);
-    let rows = await signUpUser(req.body);
-    console.log(rows)
+    let message = "";
+    // let rows;
+    var list = require('./testTask.json')
 
-    let message = "User was not created";
-    if (rows.affectedRows > 0) {
-        message= "User was successfully created!";
+    //if no users returned, signup. else alert
+    if (isUser.length == 0 || isUser == undefined){
+        let rows = await signUpUser(req.body);
+
+        //if user succesfully inserted
+        if (rows.affectedRows > 0) {
+            message= "User was successfully created!";
+            res.render('pages/taskPage.ejs', {tasks: list.Tasks})
+            return;
+        }
+    } else {
+        message = "User was not created. Account already exists.";
+        // console.log("isUser empty: ", false)
     }
+    // console.log("isUser: ", isUser)
+    
+    // console.log(rows)
+
+    
     res.render('pages/signup', {"message":message});
+    
 
 })
 
@@ -201,7 +231,6 @@ function createGroup(body){
 
 // GET USERS FUNCTION
 function checkUsers(body){
-    let isUser = false;
     let conn = dbConnection();
 
     return new Promise(function(resolve, reject){
@@ -213,10 +242,7 @@ function checkUsers(body){
             let params = [body.username]
             conn.query(sql, params, function (err, rows) {
                 if (err) throw err;
-                //res.send(rows);
-                // isUser = rows
-                console.log(rows['affectedRows'])
-                // console.log(isUser)
+
                 conn.end();
                 resolve(rows);
             });
@@ -234,7 +260,7 @@ function signUpUser(body){
      return new Promise(function(resolve, reject){
          conn.connect(function(err) {
             if (err) throw err;
-            console.log("Connected!");
+            console.log("Connected signup!");
          
             let sql = `INSERT INTO users
                          (username, password)
