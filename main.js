@@ -59,12 +59,19 @@ app.post('/loginAction',async function(req, res){
     //check if that username and password match
 
     // if yes {
-        //get all that groups tasks
-       // res.render('pages/taskPage.ejs', {tasks: list.Tasks}) //with that groups tasks
-    //} else {
-    //res.render('pages/login', {"message": message});
+       /* 1. Find out what group that user is in
+          2. Create a list of all that groups tasks
+          3. render the page while passing in:
+            - That groups tasks
+            - That users info to be used in AddTask
+            - ex res.render('pages/taskPage.ejs', {tasks: list.Tasks, UserInfo: userInfo}) 
 
-    //}
+       */ 
+      res.render('pages/taskPage.ejs', {tasks: list.Tasks}) //with that groups tasks
+      //} else {
+      //res.render('pages/login', {"message": message});
+  
+      //}
 
 });
 
@@ -339,13 +346,11 @@ function dbSetup() {
 
     var createUsers = `CREATE TABLE IF NOT EXISTS users
                         (id int NOT NULL AUTO_INCREMENT,
-                        group_id int,
                         username varchar(20) NOT NULL,
                         password varchar(20) NOT NULL,
                         group_name varchar(50) NOT NULL,
                         leader bool NOT NULL DEFAULT "0",
-                        PRIMARY KEY(id), 
-                        FOREIGN KEY(group_id) REFERENCES groups(id)
+                        PRIMARY KEY(id)
                         );`
     connection.query(createUsers, function (err, rows, fields) {
         if (err) {
@@ -363,7 +368,6 @@ function dbSetup() {
     //code to create the tasks table
     var createTasks = `CREATE TABLE IF NOT EXISTS tasks
                         (id int NOT NULL AUTO_INCREMENT,
-                        group_id int NOT NULL,
                         title varchar(20) NOT NULL,
                         type varchar(20) NOT NULL,
                         location varchar(100) NOT NULL,
