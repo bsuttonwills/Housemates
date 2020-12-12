@@ -325,12 +325,14 @@ function signUpUser(body){
                                     })
                                     .catch(value=> console.log(value));
 
-                            }));
+                            }
+                        )
+                    );
                 }
             })
 
-        });//connect
-});//promise
+        };//connect
+    });//promise
 }
 //END OF SIGN UP NEW USER FUNCTION
 
