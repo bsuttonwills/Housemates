@@ -41,6 +41,8 @@ app.get('/login', function(req, res){
 
 app.post('/loginAction',async function(req, res){
     let isUser = await checkUsers(req.body);
+    console.log("isUser", isUser)
+
     let message = "";
     var list = require('./testTask.json')
 
@@ -50,21 +52,15 @@ app.post('/loginAction',async function(req, res){
         res.render('pages/login', {"message": message})
 
     } else if (isUser[0].password === req.body.password){
-        res.render('pages/taskPage.ejs', {tasks: list.Tasks})
+        groupList = await groupTasks(isUser[0].group_name)
+        res.render('pages/taskPage.ejs', {tasks: groupList, userInfo:isUser})
         
     } else {
         message = "Username or Password is incorrect."
         res.render('pages/login', {"message": message})
     }
-    //check if that username and password match
 
-    // if yes {
-        //get all that groups tasks
-       // res.render('pages/taskPage.ejs', {tasks: list.Tasks}) //with that groups tasks
-    //} else {
-    //res.render('pages/login', {"message": message});
 
-    //}
 
 });
 
@@ -251,6 +247,28 @@ function checkUsers(body){
     })
 }
 
+//Get Group Tasks
+function groupTasks(gName){
+    let conn = dbConnection();
+
+    return new Promise(function(resolve, reject){
+        conn.connect(function(err) {
+            if (err) throw err;
+            console.log("Get group tasks Connected");
+
+            let sql = `SELECT * FROM tasks WHERE group_name = ?;`;
+            let params = [gName]
+            conn.query(sql, params, function (err, rows) {
+                if (err) throw err;
+
+                conn.end();
+                resolve(rows);
+            });
+
+        })
+    })
+}
+
 
 //SIGN UP NEW USER FUNCTION
 function signUpUser(body){
@@ -289,13 +307,13 @@ function insertTask(body){
             console.log("Insert Task Connected!");
             
             let sql = `INSERT INTO tasks
-                            (group_id, title, type, location, time, date, description)
-                            VALUES (?,?,?,?,?,?,?)`;
+                            (title, type, location, time, date, description)
+                            VALUES (?,?,?,?,?,?)`;
             
             let hour = body.hour;
             let fullTime = hour.concat(":", body.minute, body.day_night);
 
-            let params = [0, body.title, body.type, body.location, fullTime, body.date, body.desc];
+            let params = [body.title, body.type, body.location, fullTime, body.date, body.desc];
             connection.query(sql, params, function (err, rows, fields) {
                 if (err) throw err;
                 //res.send(rows);
@@ -339,13 +357,11 @@ function dbSetup() {
 
     var createUsers = `CREATE TABLE IF NOT EXISTS users
                         (id int NOT NULL AUTO_INCREMENT,
-                        group_id int,
                         username varchar(20) NOT NULL,
                         password varchar(20) NOT NULL,
                         group_name varchar(50) NOT NULL,
                         leader bool NOT NULL DEFAULT "0",
-                        PRIMARY KEY(id), 
-                        FOREIGN KEY(group_id) REFERENCES groups(id)
+                        PRIMARY KEY(id)
                         );`
     connection.query(createUsers, function (err, rows, fields) {
         if (err) {
@@ -363,7 +379,6 @@ function dbSetup() {
     //code to create the tasks table
     var createTasks = `CREATE TABLE IF NOT EXISTS tasks
                         (id int NOT NULL AUTO_INCREMENT,
-                        group_id int NOT NULL,
                         title varchar(20) NOT NULL,
                         type varchar(20) NOT NULL,
                         location varchar(100) NOT NULL,
