@@ -52,7 +52,7 @@ app.post('/loginAction',async function(req, res){
     } else if (isUser[0].password === req.body.password){
         groupList = await groupTasks(isUser[0].group_name)
         res.render('pages/taskPage.ejs', {tasks: groupList, userInfo:isUser})
-        
+
     } else {
         message = "Username or Password is incorrect."
         res.render('pages/login', {"message": message})
@@ -73,10 +73,10 @@ app.get('/joinGroup', function(req, res){
 
 app.post('/addToGroup', async function(req, res) {
     let message = ""
-    
+
     let rows = await joinGroup(req.body)
     console.log(rows)
-    
+
     message = "You have failed to join a group."
     if (rows.affectedRows > 0) {
         message = "You have successfully joined a group!";
@@ -114,12 +114,12 @@ app.post('/signUpUser', async function(req, res) {
         // console.log("isUser empty: ", false)
     }
     // console.log("isUser: ", isUser)
-    
+
     // console.log(rows)
 
-    
+
     res.render('pages/signup', {"message":message});
-    
+
 
 })
 
@@ -156,29 +156,29 @@ app.post('/createAGroup', async function(req, res) {
 
 //JOIN GROUP FUNCTION
 function joinGroup(body){
-   
+
     let conn = dbConnection();
-     
-     return new Promise(function(resolve, reject){
-         conn.connect(function(err) {
+
+    return new Promise(function(resolve, reject){
+        conn.connect(function(err) {
             if (err) throw err;
             console.log("Connected!");
-         
+
             let sql = `UPDATE users
                         set group_name =?
                         WHERE username =? `;
-         
+
             let params = [body.gName, body.uName];
             conn.query(sql, params, function (err, rows, fields) {
-               if (err) throw err;
-               //res.send(rows);
-               conn.end();
-               resolve(rows);
+                if (err) throw err;
+                //res.send(rows);
+                conn.end();
+                resolve(rows);
             });
-         
-         });//connect
-     });//promise 
- }
+
+        });//connect
+    });//promise
+}
 //END OF JOIN GROUP FUNCTION
 
 //This serves as a test site, NO LINKS DIRECT HERE!
@@ -197,11 +197,11 @@ app.get('/grouptasks', function(req, res){
 // CREATE GROUP FUNCTION
 
 function createGroup(body){
-   
+
     let conn = dbConnection();
-     
-     return new Promise(function(resolve, reject){
-         conn.connect(function(err) {
+
+    return new Promise(function(resolve, reject){
+        conn.connect(function(err) {
             if (err) throw err;
             console.log("Connected!");
 
@@ -211,15 +211,15 @@ function createGroup(body){
 
             let params = [body.gName, body.uName];
             conn.query(sql, params, function (err, rows, fields) {
-            if (err) throw err;
-            //res.send(rows);
-            conn.end();
-            resolve(rows);
+                if (err) throw err;
+                //res.send(rows);
+                conn.end();
+                resolve(rows);
             });
-         
-         });//connect
-     });//promise 
- }
+
+        });//connect
+    });//promise
+}
 
 // END OF CREATE GROUP FUNCTION
 
@@ -270,44 +270,84 @@ function groupTasks(gName){
 
 //SIGN UP NEW USER FUNCTION
 function signUpUser(body){
-   
+
     let conn = dbConnection();
-     
-     return new Promise(function(resolve, reject){
-         conn.connect(function(err) {
-            if (err) throw err;
-            console.log("Connected signup!");
-         
-            let sql = `INSERT INTO users
-                         (username, password)
-                          VALUES (?,?)`;
-         
-            let params = [body.username, body.password];
-            conn.query(sql, params, function (err, rows, fields) {
-               if (err) throw err;
-               //res.send(rows);
-               conn.end();
-               resolve(rows);
-            });
-         
-         });//connect
-     });//promise 
- }
+
+    router.post('/register',(req,res)=>{
+        const {name,email, password, password2} = req.body;
+        let errors = [];
+        console.log(' Name ' + name+ ' email :' + email+ ' pass:' + password);
+        if(!name || !email || !password || !password2) {
+            errors.push({msg : "Please fill in all fields"})
+        }
+
+        if(password !== password2) {
+            errors.push({msg : "passwords dont match"});
+        }
+
+        //check if password is more than 6 characters
+        if(password.length < 6 ) {
+            errors.push({msg : 'password atleast 6 characters'})
+        }
+        if(errors.length > 0 ) {
+            res.render('register', {
+                errors : errors,
+                name : name,
+                email : email,
+                password : password,
+                password2 : password2})
+        } else {
+            //validation passed
+            User.findOne({email : email}).exec((err,user)=>{
+                console.log(user);
+                if(user) {
+                    errors.push({msg: 'email already registered'});
+                    res.render('register',{errors,name,email,password,password2})
+                } else {
+                    const newUser = new User({
+                        name : name,
+                        email : email,
+                        password : password
+                    });
+
+                    //hash password
+                    bcrypt.genSalt(10,(err,salt)=>
+                        bcrypt.hash(newUser.password,salt,
+                            (err,hash)=> {
+                                if(err) throw err;
+                                //save pass to hash
+                                newUser.password = hash;
+                                //save user
+                                newUser.save()
+                                    .then((value)=>{
+                                        console.log(value)
+                                        res.redirect('/users/login');
+                                    })
+                                    .catch(value=> console.log(value));
+
+                            }));
+                }
+            })
+
+        });//connect
+});//promise
+}
 //END OF SIGN UP NEW USER FUNCTION
+
 
 //INSERT NEW TASK FUNCTION
 function insertTask(body){
     let connection = dbConnection();
-     
+
     return new Promise(function(resolve, reject){
         connection.connect(function(err) {
             if (err) throw err;
             console.log("Insert Task Connected!");
-            
+
             let sql = `INSERT INTO tasks
                             (title, type, location, time, date, description)
                             VALUES (?,?,?,?,?,?)`;
-            
+
             let hour = body.hour;
             let fullTime = hour.concat(":", body.minute, body.day_night);
 
@@ -318,9 +358,9 @@ function insertTask(body){
                 connection.end();
                 resolve(rows);
             });
-        
+
         });//connect
-    });//promise 
+    });//promise
 }
 
 
@@ -363,7 +403,7 @@ function dbSetup() {
                         );`
     connection.query(createUsers, function (err, rows, fields) {
         if (err) {
-        throw err
+            throw err
         }
     })
 
@@ -372,7 +412,7 @@ function dbSetup() {
     // connection.query(droptasks, function (err, rows, fields) {
     //     if (err) {
     //     throw err
-    //     } 
+    //     }
     // })
     //code to create the tasks table
     var createTasks = `CREATE TABLE IF NOT EXISTS tasks
@@ -386,10 +426,10 @@ function dbSetup() {
                         PRIMARY KEY(id));`
     connection.query(createTasks, function (err, rows, fields) {
         if (err) {
-        throw err
-        } 
+            throw err
+        }
     })
-    
+
 
     connection.end()
 }
@@ -414,10 +454,10 @@ async function ifExist(table, identifier, name){
     let num = await promise
     return num === 0
 }
-  
+
 dbSetup()
 
-  
+
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}...`)
