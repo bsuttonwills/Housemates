@@ -41,8 +41,6 @@ app.get('/login', function(req, res){
 
 app.post('/loginAction',async function(req, res){
     let isUser = await checkUsers(req.body);
-    console.log("isUser", isUser)
-
     let message = "";
     var list = require('./testTask.json')
 
