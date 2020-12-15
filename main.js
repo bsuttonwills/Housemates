@@ -270,70 +270,29 @@ function groupTasks(gName){
 
 //SIGN UP NEW USER FUNCTION
 function signUpUser(body){
-
+   
     let conn = dbConnection();
-
-    router.post('/register',(req,res)=>{
-        const {name,email, password, password2} = req.body;
-        let errors = [];
-        console.log(' Name ' + name+ ' email :' + email+ ' pass:' + password);
-        if(!name || !email || !password || !password2) {
-            errors.push({msg : "Please fill in all fields"})
-        }
-
-        if(password !== password2) {
-            errors.push({msg : "passwords dont match"});
-        }
-
-        //check if password is more than 6 characters
-        if(password.length < 6 ) {
-            errors.push({msg : 'password atleast 6 characters'})
-        }
-        if(errors.length > 0 ) {
-            res.render('register', {
-                errors : errors,
-                name : name,
-                email : email,
-                password : password,
-                password2 : password2})
-        } else {
-            //validation passed
-            User.findOne({email : email}).exec((err,user)=>{
-                console.log(user);
-                if(user) {
-                    errors.push({msg: 'email already registered'});
-                    res.render('register',{errors,name,email,password,password2})
-                } else {
-                    const newUser = new User({
-                        name : name,
-                        email : email,
-                        password : password
-                    });
-
-                    //hash password
-                    bcrypt.genSalt(10,(err,salt)=>
-                        bcrypt.hash(newUser.password,salt,
-                            (err,hash)=> {
-                                if(err) throw err;
-                                //save pass to hash
-                                newUser.password = hash;
-                                //save user
-                                newUser.save()
-                                    .then((value)=>{
-                                        console.log(value)
-                                        res.redirect('/users/login');
-                                    })
-                                    .catch(value=> console.log(value));
-
-                            }
-                        )
-                    );
-                }
-            })
-
-        };//connect
-    });//promise
-}
+     
+     return new Promise(function(resolve, reject){
+         conn.connect(function(err) {
+            if (err) throw err;
+            console.log("Connected signup!");
+         
+            let sql = `INSERT INTO users
+                         (username, password)
+                          VALUES (?,?)`;
+         
+            let params = [body.username, body.password];
+            conn.query(sql, params, function (err, rows, fields) {
+               if (err) throw err;
+               //res.send(rows);
+               conn.end();
+               resolve(rows);
+            });
+         
+         });//connect
+     });//promise 
+ }
 //END OF SIGN UP NEW USER FUNCTION
 
 
